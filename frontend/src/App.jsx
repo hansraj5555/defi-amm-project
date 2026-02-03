@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { ethers } from 'ethers'
 import { getProvider, getAmmContract, getTokenContract } from "./contracts";
 import { AMM_ADDRESS, TOKEN_ADDRESS } from "./config";
 
 function App() {
   const [account, setAccount] = useState("");
   const [reserves, setReserves] = useState({ reserveA: null, reserveB: null });
+  const [tokenDecimals, setTokenDecimals] = useState(18);
   const [amountIn, setAmountIn] = useState("");
   const [status, setStatus] = useState("");
 
@@ -24,7 +26,20 @@ function App() {
       const amm = await getAmmContract();
       const r = await amm.getReserves();
       // r may be BigNumber array-like
-      setReserves({ reserveA: r[0].toString(), reserveB: r[1].toString() });
+      const reserveA = r[0];
+      const reserveB = r[1];
+
+      // try to get token decimals for nicer display/parsing
+      try {
+        const token = await getTokenContract();
+        const d = await token.decimals();
+        setTokenDecimals(Number(d));
+      } catch (err) {
+        // fallback to 18
+        setTokenDecimals(18);
+      }
+
+      setReserves({ reserveA: reserveA.toString(), reserveB: reserveB.toString() });
     } catch (err) {
       setStatus('Unable to load reserves: ' + err.message);
     }
@@ -41,20 +56,19 @@ function App() {
       const amm = await getAmmContract();
       const token = await getTokenContract();
 
-      // using raw smallest-unit input for now
-      const wei = amountIn;
+      // parse human-readable amount into smallest unit using token decimals
+      const parsedAmount = ethers.parseUnits(amountIn || '0', tokenDecimals);
 
       // check allowance
       const allowanceBn = await token.allowance(account, AMM_ADDRESS);
-      const allowanceStr = allowanceBn.toString();
-      if (BigInt(allowanceStr) < BigInt(wei)) {
+      if (BigInt(allowanceBn.toString()) < BigInt(parsedAmount.toString())) {
         setStatus('Approving tokens for AMM...');
-        const approveTx = await token.approve(AMM_ADDRESS, wei);
+        const approveTx = await token.approve(AMM_ADDRESS, parsedAmount);
         await approveTx.wait();
         setStatus('Approved — sending swap...');
       }
 
-      const tx = await amm.swapExactTokensForTokens(wei, 0);
+      const tx = await amm.swapExactTokensForTokens(parsedAmount, 0);
       await tx.wait();
       setStatus('Swap confirmed');
       loadReserves();
