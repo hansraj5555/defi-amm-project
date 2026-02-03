@@ -1,0 +1,14 @@
+{
+  "name": "defi-amm-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^17.2.3",
+    "ethers": "^6.16.0",
+    "hardhat": "^3.1.6"
+  }
+}
