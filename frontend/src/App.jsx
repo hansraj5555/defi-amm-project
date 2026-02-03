@@ -34,8 +34,26 @@ function App() {
     e.preventDefault();
     setStatus('Sending swap...');
     try {
+      if (!account) {
+        setStatus('Connect wallet first');
+        return;
+      }
       const amm = await getAmmContract();
-      const wei = amountIn; // assume user inputs in smallest unit for now
+      const token = await getTokenContract();
+
+      // using raw smallest-unit input for now
+      const wei = amountIn;
+
+      // check allowance
+      const allowanceBn = await token.allowance(account, AMM_ADDRESS);
+      const allowanceStr = allowanceBn.toString();
+      if (BigInt(allowanceStr) < BigInt(wei)) {
+        setStatus('Approving tokens for AMM...');
+        const approveTx = await token.approve(AMM_ADDRESS, wei);
+        await approveTx.wait();
+        setStatus('Approved — sending swap...');
+      }
+
       const tx = await amm.swapExactTokensForTokens(wei, 0);
       await tx.wait();
       setStatus('Swap confirmed');
