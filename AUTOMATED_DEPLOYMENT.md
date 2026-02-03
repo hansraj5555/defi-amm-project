@@ -164,8 +164,7 @@ After deployment:
 
 4. **Portfolio Addition**
    - Add to GitHub with live links
-   - Mention in interviews
-   - Show on portfolio website
+   - Share deployed contract addresses
 
 ---
 
@@ -235,8 +234,7 @@ After deployment, verify:
 ✅ **Screenshot the deployment** - Shows you deployed it  
 ✅ **Save contract addresses** - You'll need them often  
 ✅ **Share Etherscan links** - Professional proof  
-✅ **Mention in interviews** - Shows initiative  
-✅ **Keep it live** - Recruiters will check  
+✅ **Keep it live** - Contracts remain accessible  
 
 ---
 

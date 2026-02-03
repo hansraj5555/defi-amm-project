@@ -122,15 +122,6 @@ defi-amm-project/
 - Ethers.js v6 setup
 - React hooks for state management
 
-## Interview Talking Points
-
-1. **AMM Mechanics**: Explain x*y=k constant product formula
-2. **Fee Logic**: Why 0.3% (997/1000) protects against MEV
-3. **Custom Errors**: Gas optimization vs require messages
-4. **Testing Strategy**: Test success paths + failure paths
-5. **Deployment**: Script-based deployment for reproducibility
-6. **Frontend**: Direct blockchain interaction with ethers.js
-
 ## Troubleshooting
 
 ### Forge Command Not Found

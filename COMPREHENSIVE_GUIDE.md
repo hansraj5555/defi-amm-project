@@ -1,4 +1,4 @@
-# 📘 DeFi AMM Project - Complete Guide & Reference
+# DeFi AMM Project - Complete Guide & Reference
 
 ## TABLE OF CONTENTS
 1. Introduction & Basic Concepts
@@ -6,8 +6,7 @@
 3. Smart Contracts Explained
 4. Testing & Deployment
 5. Frontend Integration
-6. Interview Q&A
-7. Recruiter Questions
+6. Technical Reference
 8. Resources & Sources
 9. Quick Reference
 10. Glossary
@@ -545,123 +544,40 @@ npm run dev             # Start development server
 
 ---
 
-## PART 6: INTERVIEW Q&A
+## PART 6: TECHNICAL REFERENCE
 
-### Basic Level Questions
+### Key Formulas
 
-**Q: What is DeFi?**
-A: Decentralized Finance - financial services without banks, using smart contracts and blockchain instead.
+**Constant Product:**
+```
+x * y = k
+x = input reserve
+y = output reserve
+k = invariant (stays constant)
+```
 
-**Q: What is an AMM?**
-A: Automated Market Maker - uses math formulas instead of order books to price trades automatically.
+**Price Impact:**
+```
+Output = (input × 997/1000 × output_reserve) / 
+         (input_reserve × 1000 + input × 997)
+```
 
-**Q: How does x*y=k work?**
-A: Product of reserves stays constant. When you buy tokens, reserve ratio changes, making tokens more expensive. This prevents pool from being drained.
+**LP Share:**
+```
+User_share = User_LP_tokens / Total_LP_tokens
+User_earn = Pool_total_fees × User_share
+```
 
-**Q: What is an ERC20 token?**
-A: A standard for fungible tokens on Ethereum. Defines functions like transfer, approve, and balanceOf.
-
-**Q: Why do we need approval?**
-A: Security. Users explicitly allow contracts to spend their tokens, not granting full access.
-
----
-
-### Intermediate Level Questions
-
-**Q: How does the 0.3% fee work?**
-A: Fee is deducted from input. Instead of input × 1000, we use input × 997. Fee stays in reserve, proportionally benefiting all LPs.
-
-**Q: What is impermanent loss?**
-A: When price changes dramatically, LP ends up with more of the depreciating token. Only profitable if fees earned exceed this loss.
-
-**Q: How are LP shares tracked?**
-A: When user adds 1 ETH worth of liquidity, we record 1 unit of LP tokens. When claiming profits, they get (their share / total) × fees.
-
-**Q: Why use custom errors?**
-A: Save gas (~200 per error). Error handling is common, so savings add up.
+**Fee Deduction:**
+```
+Input × 997 = Actual input used
+997 / 1000 = 0.997 (deducts 0.3%)
+Fee = Input - (Input × 997/1000)
+```
 
 ---
 
-### Advanced Level Questions
-
-**Q: How does price discovery happen without order books?**
-A: Price is set by reserve ratio. Larger swaps hit worse rates. Arbitrageurs buy when price differs from market, keeping pool efficient.
-
-**Q: What prevents reentrancy attacks?**
-A: Solidity checks-effects-interactions pattern. Also, simple transfers prevent recursive calls.
-
-**Q: How would you add token-to-token swaps?**
-A: Route through WETH (wrapped ETH). Token1 → WETH → Token2. Two swaps instead of one.
-
-**Q: What's the difference between Uniswap V2 and V3?**
-A: V3 allows concentrated liquidity (LP providers choose price range). More complex but more capital efficient.
-
----
-
-### Technical Questions
-
-**Q: What happens if pool reserves reach zero?**
-A: Can't happen. If someone tries to swap entire reserve, they get decreasing output due to formula. Pool approaches but never reaches zero.
-
-**Q: How do you prevent flash loan attacks?**
-A: Store prices from previous block. Compare to current price. If drastically different, reject transaction.
-
-**Q: What's the math for optimal liquidity ratio?**
-A: User should deposit equal values: amount1 × price1 = amount2 × price2. Otherwise arbitrageurs immediately profit.
-
----
-
-### Real-World Questions
-
-**Q: How would you deploy this to production?**
-A: Audit (security firm checks code), deploy to testnet, test thoroughly, deploy to mainnet with liquidity.
-
-**Q: What happens if there's a bug?**
-A: If serious, pause the contract (emergency stop), refund users, fix bug, redeploy.
-
-**Q: How do you attract liquidity?**
-A: Offer LP incentives (extra tokens for providing liquidity), have popular token pairs, keep fees low.
-
----
-
-## PART 7: RECRUITER QUESTIONS
-
-### "Tell me about this project"
-
-**Strong Answer:**
-"This is a production-grade DeFi AMM using the constant product formula (x*y=k). Users can provide liquidity to earn 0.3% fees, or trade ETH for tokens at auto-calculated prices. I implemented two smart contracts: an ERC20 token and the AMM with proper error handling and gas optimization. I wrote comprehensive tests covering both happy paths and edge cases, showing I think about failure scenarios. It's deployable to any EVM chain and includes a React frontend with MetaMask integration. The unique part is the fee collection mechanism—it stays in the reserve, proportionally benefiting all LPs. I've thoroughly documented it with 8 guides and Q&A for interviews."
-
----
-
-### "Why should we hire you based on this?"
-
-**Strong Answer:**
-"This project demonstrates several hiring signals: First, I understand complex systems (DeFi mechanics, constant product formula, LP economics). Second, I write production-quality code with custom errors, proper events, and gas optimization. Third, I test comprehensively—not just happy paths but edge cases. Fourth, I can communicate technically—I wrote 57 KB of documentation to help others understand. Fifth, I'm full-stack capable—smart contracts, testing, deployment scripts, and frontend integration. Finally, I'm interview-ready and can explain every decision I made."
-
----
-
-### "What would you improve?"
-
-**Strong Answer:**
-"I'd add: First, remove liquidity function (let LPs exit). Second, token-to-token swaps via routing (not just ETH pairs). Third, slippage protection (users specify minimum output). Fourth, flash loan protection (check prices from previous block). Fifth, governance token (let community control fees). Sixth, security audit (professional review). Finally, liquidity mining incentives (extra rewards to attract LPs). Each improvement teaches something new."
-
----
-
-### "How would you scale this?"
-
-**Strong Answer:**
-"Multiple strategies: First, deploy to L2 (Arbitrum, Optimism) for cheaper fees. Second, integrate Uniswap-style routing to access all tokens. Third, add more liquidity incentives. Fourth, integrate with lending protocols (borrowed funds as LP capital). Fifth, create governance (DAO voting on parameters). Sixth, cross-chain bridges (trade between chains). Each adds complexity but increases utility."
-
----
-
-### "What's the biggest risk?"
-
-**Strong Answer:**
-"Impermanent loss for LPs. If price moves dramatically, they end up worse off than if they hodled. Solution: Create fee structure and incentives that compensate. Also, smart contract bugs. Solution: Audit, extensive testing, emergency pause mechanism. Third, market risk (bad liquidity attracts bad trades). Solution: Start with quality token pairs, incentivize early LPs."
-
----
-
-## PART 8: RESOURCES & SOURCES
+## PART 7: RESOURCES & DOCUMENTATION
 
 ### Essential Documentation
 - **Uniswap V2 Whitepaper**: https://uniswap.org/whitepaper.pdf
@@ -732,7 +648,7 @@ A: Offer LP incentives (extra tokens for providing liquidity), have popular toke
 
 ---
 
-## PART 9: QUICK REFERENCE
+## PART 10: QUICK REFERENCE
 
 ### Key Formulas
 
@@ -812,7 +728,7 @@ frontend/src/App.jsx     30 lines
 
 ---
 
-## PART 10: GLOSSARY
+## PART 11: GLOSSARY
 
 **AMM**: Automated Market Maker. Prices trades using formulas instead of order books.
 
@@ -883,7 +799,7 @@ frontend/src/App.jsx     30 lines
 
 ---
 
-## HOW TO STUDY THIS GUIDE
+## PART 12: QUICK START GUIDE
 
 ### 1-Hour Quick Study
 - Read: Introduction & Basic Concepts
@@ -891,14 +807,14 @@ frontend/src/App.jsx     30 lines
 - Skim: Part 3: Smart Contracts
 - Result: Understand what this is
 
-### 3-Hour Deep Study
+### 3-Hour Technical Study
 - Read: All basics
 - Study: Smart Contracts (Part 3)
 - Study: Testing & Deployment (Part 4)
-- Study: Q&A (Part 6)
+- Study: References (Part 6)
 - Result: Can explain to others
 
-### 6-Hour Master Study
+### 6-Hour Complete Study
 - Read entire guide
 - Code review of contracts
 - Run tests locally
@@ -910,32 +826,18 @@ frontend/src/App.jsx     30 lines
 
 ## FINAL CHECKLIST
 
-Before your interview:
+Before deploying to production:
 
 - [ ] Read this entire guide
 - [ ] Read CODE_WALKTHROUGH.md
-- [ ] Read INTERVIEW_GUIDE.md
 - [ ] Run `forge test` successfully
 - [ ] Deploy locally with Anvil
 - [ ] Deploy to Sepolia testnet
 - [ ] Connect React frontend
 - [ ] Execute actual swaps
 - [ ] Explain every function
-- [ ] Answer all Q&A from memory
-- [ ] Prepare your "project story"
-- [ ] Practice recruiter responses
-
----
-
-## PROJECT STORY 
-
-"I built a complete DeFi Automated Market Maker from scratch. It has two smart contracts: an ERC20 token and an AMM using the constant product formula (x*y=k). This enables users to trade ETH for tokens at automatically-calculated prices while liquidity providers earn 0.3% fees.
-
-The interesting part is understanding the economics. Liquidity providers take on impermanent loss risk but are compensated by trading fees. The constant product formula mathematically prevents pool draining while maintaining fair pricing through arbitrage.
-
-I've demonstrated production-quality development: custom errors for gas optimization, comprehensive tests covering both success and failure paths, deployment scripts for any EVM chain, and a React frontend with MetaMask integration.
-
-Most importantly, I've documented it thoroughly so others can learn from it. I can explain every architectural decision, every line of code, and every tradeoff."
+- [ ] Security audit completed
+- [ ] Contract verified on Etherscan
 
 ---
 

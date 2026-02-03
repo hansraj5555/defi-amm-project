@@ -122,17 +122,6 @@ contract Token {
 }
 ```
 
-### Token.sol Key Interview Points
-
-**Q: Why approval system?**
-A: Security. Without it, contracts would need private keys. With approval, users explicitly grant permission and can revoke it.
-
-**Q: What if approval is set to 0?**
-A: Spender can't transfer anything. User can change approval anytime.
-
-**Q: What prevents double-spending?**
-A: `allowance[from][msg.sender] -= amount` reduces remaining allowance. Each unit can only be used once.
-
 ---
 
 ## File: contracts/AMM.sol
@@ -337,23 +326,6 @@ contract AMM {
 }
 ```
 
-### AMM.sol Key Interview Points
-
-**Q: What is 'payable'?**
-A: Function can receive ETH. msg.value contains the ETH amount sent.
-
-**Q: Why 997 instead of 1000?**
-A: Deducts 0.3% fee. (1 - 0.003) = 0.997 = 997/1000
-
-**Q: How does constant product protect the pool?**
-A: Ensures product x*y stays ~constant. Can't drain pool, price rises with demand, arbitrage keeps price fair.
-
-**Q: What if someone calls getAmountOut with huge input?**
-A: Returns very small amount (price impact). Incentivizes smaller swaps and liquidity provision.
-
-**Q: Why not use require for errors?**
-A: Custom errors use 4 bytes, save ~200 gas per revert vs require with string.
-
 ---
 
 ## File: test/AMM.t.sol
@@ -484,20 +456,6 @@ contract AMMTest is Test {
 }
 ```
 
-### Test.sol Key Interview Points
-
-**Q: What is vm.startPrank?**
-A: Sets msg.sender for all following calls. Makes testing user interactions easy.
-
-**Q: Why setUp() runs before each test?**
-A: Isolation. Each test gets fresh contracts, avoiding state pollution.
-
-**Q: Why test both success and failure?**
-A: Shows you understand requirements and edge cases (not just happy path).
-
-**Q: What could testSwap check?**
-A: Could assert user received approximately correct tokens, pool reserves updated, etc.
-
 ---
 
 ## File: test/SecurityTests.t.sol
@@ -620,4 +578,4 @@ contract Deploy is Script {
 
 ---
 
-This complete walkthrough should help you understand every line and explain it in interviews!
+This complete walkthrough covers every file in the project with detailed explanations.

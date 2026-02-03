@@ -311,4 +311,4 @@ Actual: 45.3 tokens (due to 0.1 out of 1 = 10% swap)
 
 ---
 
-This visual guide helps explain the AMM to non-technical people and preps you for whiteboarding interviews.
+This visual guide helps explain the AMM mechanics and flow with diagrams.

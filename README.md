@@ -60,7 +60,7 @@ defi-amm-project/
 | **00_START_HERE.md** | Overview & next steps | 5 min |
 | **QUICK_START.md** | 5-minute getting started guide | 5 min |
 | **CODE_WALKTHROUGH.md** | Every line explained | 1 hour |
-| **INTERVIEW_GUIDE.md** | Q&A and talking points | 30 min |
+
 | **VISUAL_GUIDE.md** | Diagrams and flows | 30 min |
 | **SETUP_GUIDE.md** | Detailed installation | 15 min |
 
@@ -161,17 +161,6 @@ Result: Secure, permissioned token transfer
 | Documentation | 57 KB |
 | Gas savings via custom errors | ~200 per error |
 | Fee percentage | 0.3% |
-
-### 🎯 Interview Preparation
-
-This project demonstrates:
-- ✅ Deep understanding of DeFi mechanics
-- ✅ Smart contract development best practices
-- ✅ Comprehensive testing methodology
-- ✅ Deployment and DevOps skills
-- ✅ Frontend/blockchain integration
-- ✅ Clear technical communication (7 guides)
-- ✅ Production-quality code
 
 ### 🔗 Resources
 

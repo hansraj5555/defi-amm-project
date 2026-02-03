@@ -344,14 +344,6 @@ Before deploying to Sepolia:
 
 ---
 
-## Interview Talking Points
-
-When asked "Tell me about this project":
-
-*"This is a complete DeFi implementation following Uniswap V2 architecture. It has two contracts: an ERC20 token and an AMM using the constant product formula. Users can provide liquidity to earn 0.3% fees, or trade ETH for tokens at automated prices. The unique part is the fee mechanism—it stays in the pool, proportionally benefiting all liquidity providers. I've thoroughly tested both success and failure paths. The frontend connects via MetaMask and ethers.js, making it a complete Web3 stack. It's production-style code with proper error handling and gas optimizations."*
-
----
-
 ## Resources
 
 - Foundry Docs: https://book.getfoundry.sh
