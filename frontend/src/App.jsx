@@ -7,6 +7,7 @@ function App() {
   const [account, setAccount] = useState("");
   const [reserves, setReserves] = useState({ reserveA: null, reserveB: null });
   const [tokenDecimals, setTokenDecimals] = useState(18);
+  const [tokenBalance, setTokenBalance] = useState(null);
   const [amountIn, setAmountIn] = useState("");
   const [status, setStatus] = useState("");
 
@@ -15,7 +16,16 @@ function App() {
       const provider = await getProvider();
       await provider.send("eth_requestAccounts", []);
       const signer = await provider.getSigner();
-      setAccount(await signer.getAddress());
+      const addr = await signer.getAddress();
+      setAccount(addr);
+      // load token balance on connect
+      try {
+        const token = await getTokenContract();
+        const bal = await token.balanceOf(addr);
+        setTokenBalance(bal.toString());
+      } catch (err) {
+        setTokenBalance(null);
+      }
     } catch (err) {
       setStatus(err.message || String(err));
     }
@@ -42,6 +52,17 @@ function App() {
       setReserves({ reserveA: reserveA.toString(), reserveB: reserveB.toString() });
     } catch (err) {
       setStatus('Unable to load reserves: ' + err.message);
+    }
+  }
+
+  async function loadBalance() {
+    if (!account) return;
+    try {
+      const token = await getTokenContract();
+      const bal = await token.balanceOf(account);
+      setTokenBalance(bal.toString());
+    } catch (err) {
+      setStatus('Unable to load balance: ' + err.message);
     }
   }
 
@@ -100,16 +121,18 @@ function App() {
 
       <div style={{ marginBottom: 12 }}>
         <h4>Pool Reserves</h4>
-        <div>Reserve A: {reserves.reserveA ?? '—'}</div>
-        <div>Reserve B: {reserves.reserveB ?? '—'}</div>
-        <button onClick={loadReserves} style={{ marginTop: 8 }}>Refresh</button>
+        <div>Reserve A: {reserves.reserveA ? ethers.formatUnits(reserves.reserveA, tokenDecimals) : '—'}</div>
+        <div>Reserve B: {reserves.reserveB ? ethers.formatUnits(reserves.reserveB, tokenDecimals) : '—'}</div>
+        <button onClick={loadReserves} style={{ marginTop: 8, marginRight: 8 }}>Refresh</button>
+        <button onClick={loadBalance} style={{ marginTop: 8 }}>Refresh Balance</button>
+        <div style={{ marginTop: 8 }}>Balance: {tokenBalance ? ethers.formatUnits(tokenBalance, tokenDecimals) : '—'}</div>
       </div>
 
       <form onSubmit={handleSwap} style={{ marginBottom: 12 }}>
         <h4>Swap</h4>
         <label>
-          Amount (raw units):
-          <input value={amountIn} onChange={e => setAmountIn(e.target.value)} style={{ marginLeft: 8 }} />
+          Amount:
+          <input placeholder="0.0" value={amountIn} onChange={e => setAmountIn(e.target.value)} style={{ marginLeft: 8 }} />
         </label>
         <button type="submit" style={{ marginLeft: 8 }}>Swap</button>
       </form>
